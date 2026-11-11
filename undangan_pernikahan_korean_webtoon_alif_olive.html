@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wedding of Alif & Olive - Webtoon Edition</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Gaegu (Comic/Handwritten), Fredoka, & Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Gaegu:wght@400;700&family=Mali:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        manhwa: {
+                            pink: '#FFD6E8',
+                            hotpink: '#FF6584',
+                            deepPink: '#E83E8C',
+                            lavender: '#E2D4F9',
+                            purple: '#6C5CE7',
+                            mint: '#D4F6E8',
+                            yellow: '#FFF3BF',
+                            dark: '#2D3436',
+                            cardBg: '#FFF9FB'
+                        }
+                    },
+                    fontFamily: {
+                        comic: ['"Gaegu"', 'cursive'],
+                        bubble: ['"Fredoka"', 'sans-serif'],
+                        mali: ['"Mali"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFF5F8;
+            color: #2D3436;
+            font-family: 'Fredoka', sans-serif;
+            overflow-x: hidden;
+            background-image: radial-gradient(#FFD6E8 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+        }
+
+        /* Webtoon Panel Style */
+        .webtoon-panel {
+            background: #FFFFFF;
+            border: 3.5px solid #2D3436;
+            box-shadow: 6px 6px 0px #2D3436;
+            border-radius: 18px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .webtoon-panel:hover {
+            transform: translateY(-4px);
+            box-shadow: 8px 8px 0px #FF6584;
+        }
+
+        .webtoon-btn {
+            background: #FF6584;
+            color: #FFFFFF;
+            border: 3px solid #2D3436;
+            box-shadow: 4px 4px 0px #2D3436;
+            font-weight: 700;
+            border-radius: 14px;
+            transition: all 0.15s ease;
+        }
+        .webtoon-btn:hover {
+            background: #FF4757;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #2D3436;
+        }
+        .webtoon-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #2D3436;
+        }
+
+        /* Speech Bubble Tail */
+        .speech-bubble {
+            position: relative;
+            background: #FFFFFF;
+            border: 3px solid #2D3436;
+            border-radius: 16px;
+            box-shadow: 4px 4px 0px #2D3436;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 14px 12px 0;
+            border-style: solid;
+            border-color: #2D3436 transparent;
+            display: block;
+            width: 0;
+        }
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 11px 9px 0;
+            border-style: solid;
+            border-color: #FFFFFF transparent;
+            display: block;
+            width: 0;
+            z-index: 1;
+        }
+
+        /* Float Hearts Animation */
+        @keyframes floatHeart {
+            0% { transform: translateY(0px) rotate(0deg) scale(0.8); opacity: 1; }
+            50% { transform: translateY(-25px) rotate(15deg) scale(1.1); }
+            100% { transform: translateY(-50px) rotate(-10deg) scale(0.8); opacity: 0; }
+        }
+        .floating-heart {
+            animation: floatHeart 3s infinite ease-in-out;
+        }
+
+        /* Webtoon Chapter Badge */
+        .webtoon-badge {
+            background: #FFE2E9;
+            border: 2px solid #2D3436;
+            color: #E83E8C;
+            font-family: 'Gaegu', cursive;
+            font-weight: 700;
+            border-radius: 20px;
+            padding: 2px 14px;
+            font-size: 1.1rem;
+            display: inline-block;
+            box-shadow: 2px 2px 0px #2D3436;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFD6E8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF6584;
+            border: 2px solid #2D3436;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="relative text-manhwa-dark selection:bg-manhwa-hotpink selection:text-white">
+
+    <!-- FLOATING MUSIC PLAYER BUTTON -->
+    <button id="audio-toggle" class="fixed bottom-6 right-6 z-50 bg-white border-3 border-manhwa-dark text-manhwa-dark p-3.5 rounded-full shadow-[4px_4px_0px_#2D3436] hover:bg-manhwa-pink transition-all active:translate-y-1 group" aria-label="Toggle Audio">
+        <div class="flex items-center gap-2 px-1">
+            <i id="audio-icon" class="fa-solid fa-heart text-manhwa-hotpink text-xl animate-pulse"></i>
+            <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 font-bold text-xs">BGM: Romance</span>
+        </div>
+    </button>
+
+    <!-- AUDIO ELEMENT -->
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b417c83f.mp3?filename=cute-romantic-loop-109862.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung audio.
+    </audio>
+
+    <!-- FULLSCREEN COVER OVERLAY (COVER COMIC) -->
+    <div id="cover-overlay" class="fixed inset-0 z-50 bg-manhwa-pink/95 flex flex-col items-center justify-center p-4 transition-all duration-700 backdrop-blur-md">
+        
+        <div class="webtoon-panel bg-white p-6 sm:p-10 max-w-lg w-full text-center relative overflow-hidden my-auto">
+            
+            <!-- Webtoon Top Header Strip -->
+            <div class="bg-manhwa-yellow border-b-3 border-manhwa-dark -mx-6 sm:-mx-10 -mt-6 sm:-mt-10 p-2 font-comic text-xl font-bold flex justify-between items-center px-6">
+                <span><i class="fa-solid fa-star text-amber-500"></i> NAVER WEBTOON STYLE</span>
+                <span class="bg-manhwa-hotpink text-white text-xs px-2 py-0.5 rounded-full border border-manhwa-dark font-bubble">EPISODE #01</span>
+            </div>
+
+            <!-- Heart Sparkles -->
+            <div class="absolute top-12 right-6 text-manhwa-hotpink text-2xl floating-heart"><i class="fa-solid fa-heart"></i></div>
+            <div class="absolute top-20 left-6 text-manhwa-purple text-xl floating-heart" style="animation-delay: 1.5s;"><i class="fa-solid fa-sparkles"></i></div>
+
+            <!-- Couple Cartoony Illustration Card -->
+            <div class="my-6 relative">
+                <div class="speech-bubble p-3 max-w-xs mx-auto mb-4 font-comic text-lg text-manhwa-deepPink font-bold">
+                    "Kisah Cinta Manis Kita Akhirnya Dimulai!" 💕
+                </div>
+                
+                <div class="w-44 h-44 sm:w-52 sm:h-52 mx-auto rounded-full border-4 border-manhwa-dark overflow-hidden bg-manhwa-mint p-2 shadow-[4px_4px_0px_#2D3436]">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" alt="Couple Webtoon" class="w-full h-full object-cover rounded-full filter contrast-105 saturate-110">
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <p class="text-xs font-bold uppercase tracking-widest text-manhwa-purple">Wedding Announcement</p>
+                <h1 class="text-4xl sm:text-5xl font-comic font-bold text-manhwa-dark tracking-wide">
+                    Alif <span class="text-manhwa-hotpink">&amp;</span> Olive
+                </h1>
+                <p class="text-xs text-slate-600 font-semibold">Jumat, 01 Januari 2027</p>
+            </div>
+
+            <!-- Guest Name Box -->
+            <div class="bg-manhwa-mint/60 border-2 border-manhwa-dark p-3.5 rounded-xl my-6">
+                <p class="text-xs text-slate-700 font-semibold">Kepada Pembaca Setia (Tamu Undangan):</p>
+                <p id="guest-name" class="text-xl font-comic font-bold text-manhwa-dark mt-0.5">Tamu Spesial</p>
+            </div>
+
+            <!-- Open Button -->
+            <button onclick="openInvitation()" class="webtoon-btn w-full py-3.5 text-base flex items-center justify-center gap-2">
+                <i class="fa-solid fa-book-open text-lg"></i>
+                <span>BACA UNDANGAN (BUKA)</span>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- MAIN INVITATION CONTENT -->
+    <div id="main-content" class="max-w-3xl mx-auto px-4 py-8 space-y-16">
+
+        <!-- HEADER / HERO PANEL -->
+        <header class="webtoon-panel p-6 sm:p-10 text-center relative overflow-hidden bg-white">
+            <div class="webtoon-badge mb-4">
+                <i class="fa-solid fa-heart text-manhwa-hotpink mr-1"></i> Special Chapter: The Vow
+            </div>
+
+            <h1 class="text-5xl sm:text-7xl font-comic font-bold text-manhwa-dark mb-2">
+                Alif <span class="text-manhwa-hotpink">&amp;</span> Olive
+            </h1>
+            <p class="text-sm sm:text-base font-semibold text-slate-600 mb-6">
+                "Kisah fiksi romantis yang kini menjadi kenyataan seumur hidup."
+            </p>
+
+            <!-- Prewedding Couple Frame -->
+            <div class="relative max-w-md mx-auto border-4 border-manhwa-dark rounded-2xl overflow-hidden bg-manhwa-lavender p-3 shadow-[6px_6px_0px_#2D3436]">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800" alt="Alif and Olive" class="w-full h-80 object-cover rounded-xl border-2 border-manhwa-dark">
+                
+                <div class="absolute bottom-6 right-6 bg-white border-2 border-manhwa-dark px-3 py-1 rounded-full font-comic text-sm font-bold shadow-[2px_2px_0px_#2D3436]">
+                    ✨ Main Characters
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center gap-2">
+                <span class="bg-manhwa-yellow text-manhwa-dark border-2 border-manhwa-dark px-4 py-1.5 rounded-full text-xs font-bold shadow-[2px_2px_0px_#2D3436]">
+                    📅 01 JANUARI 2027
+                </span>
+                <span class="bg-manhwa-mint text-manhwa-dark border-2 border-manhwa-dark px-4 py-1.5 rounded-full text-xs font-bold shadow-[2px_2px_0px_#2D3436]">
+                    📍 BALAI KARTINI JAKARTA
+                </span>
+            </div>
+        </header>
+
+        <!-- GROOM & BRIDE PROFILE PANEL (CHARACTER CARDS) -->
+        <section class="space-y-8">
+            <div class="text-center">
+                <div class="webtoon-badge mb-2">Character Profiles</div>
+                <h2 class="text-3xl sm:text-4xl font-comic font-bold text-manhwa-dark">Mempelai Utama</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Groom Card -->
+                <div class="webtoon-panel p-6 text-center bg-manhwa-cardBg relative">
+                    <div class="absolute top-4 right-4 bg-manhwa-yellow border-2 border-manhwa-dark px-2.5 py-0.5 rounded-full text-xs font-bold">
+                        Male Lead
+                    </div>
+
+                    <div class="w-36 h-36 mx-auto rounded-full border-4 border-manhwa-dark overflow-hidden bg-manhwa-lavender p-1 shadow-[4px_4px_0px_#2D3436] mb-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600" alt="Alif Groom" class="w-full h-full object-cover rounded-full">
+                    </div>
+
+                    <h3 class="text-2xl font-comic font-bold text-manhwa-dark">Alif Pratama, S.T.</h3>
+                    <p class="text-xs font-bold text-manhwa-purple mb-2">Putra dari Bpk. Hendra &amp; Ibu Ratna</p>
+                    <p class="text-xs text-slate-600 italic mb-4">"Sosok hangat yang siap menjadi pelindung &amp; pemeran utama pria selamanya."</p>
+
+                    <a href="https://instagram.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-white border-2 border-manhwa-dark px-4 py-1.5 rounded-xl text-xs font-bold hover:bg-manhwa-pink transition shadow-[2px_2px_0px_#2D3436]">
+                        <i class="fa-brands fa-instagram text-manhwa-hotpink text-sm"></i> @alif.pratama
+                    </a>
+                </div>
+
+                <!-- Bride Card -->
+                <div class="webtoon-panel p-6 text-center bg-manhwa-cardBg relative">
+                    <div class="absolute top-4 right-4 bg-manhwa-hotpink text-white border-2 border-manhwa-dark px-2.5 py-0.5 rounded-full text-xs font-bold">
+                        Female Lead
+                    </div>
+
+                    <div class="w-36 h-36 mx-auto rounded-full border-4 border-manhwa-dark overflow-hidden bg-manhwa-pink p-1 shadow-[4px_4px_0px_#2D3436] mb-4">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" alt="Olive Bride" class="w-full h-full object-cover rounded-full">
+                    </div>
+
+                    <h3 class="text-2xl font-comic font-bold text-manhwa-dark">Olive Anindya, S.Ds.</h3>
+                    <p class="text-xs font-bold text-manhwa-purple mb-2">Putri dari Bpk. Gunawan &amp; Ibu Maya</p>
+                    <p class="text-xs text-slate-600 italic mb-4">"Pemeran utama wanita manis yang melengkapi warna-warni kisah hidup Alif."</p>
+
+                    <a href="https://instagram.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-white border-2 border-manhwa-dark px-4 py-1.5 rounded-xl text-xs font-bold hover:bg-manhwa-pink transition shadow-[2px_2px_0px_#2D3436]">
+                        <i class="fa-brands fa-instagram text-manhwa-hotpink text-sm"></i> @olive.anindya
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- COUNTDOWN TIMER PANEL -->
+        <section class="webtoon-panel p-6 sm:p-8 bg-manhwa-purple text-white text-center relative overflow-hidden">
+            <div class="text-manhwa-yellow text-sm font-bold font-comic tracking-widest uppercase mb-1">
+                ⏰ Countdown To D-Day
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-comic font-bold mb-6">Menghitung Hari Bahagia</h2>
+
+            <div id="countdown" class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto">
+                <div class="bg-white text-manhwa-dark border-3 border-manhwa-dark p-3 rounded-xl shadow-[4px_4px_0px_#2D3436]">
+                    <span id="days" class="block text-3xl sm:text-4xl font-comic font-bold text-manhwa-hotpink">00</span>
+                    <span class="text-xs font-bold uppercase">Hari</span>
+                </div>
+                <div class="bg-white text-manhwa-dark border-3 border-manhwa-dark p-3 rounded-xl shadow-[4px_4px_0px_#2D3436]">
+                    <span id="hours" class="block text-3xl sm:text-4xl font-comic font-bold text-manhwa-hotpink">00</span>
+                    <span class="text-xs font-bold uppercase">Jam</span>
+                </div>
+                <div class="bg-white text-manhwa-dark border-3 border-manhwa-dark p-3 rounded-xl shadow-[4px_4px_0px_#2D3436]">
+                    <span id="minutes" class="block text-3xl sm:text-4xl font-comic font-bold text-manhwa-hotpink">00</span>
+                    <span class="text-xs font-bold uppercase">Menit</span>
+                </div>
+                <div class="bg-white text-manhwa-dark border-3 border-manhwa-dark p-3 rounded-xl shadow-[4px_4px_0px_#2D3436]">
+                    <span id="seconds" class="block text-3xl sm:text-4xl font-comic font-bold text-manhwa-hotpink">00</span>
+                    <span class="text-xs font-bold uppercase">Detik</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- EVENT DETAILS & RUNDOWN TIMELINE -->
+        <section class="space-y-8">
+            <div class="text-center">
+                <div class="webtoon-badge mb-2">Episode Schedule</div>
+                <h2 class="text-3xl sm:text-4xl font-comic font-bold text-manhwa-dark">Waktu &amp; Rundown Acara</h2>
+            </div>
+
+            <!-- Event Details Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Akad Card -->
+                <div class="webtoon-panel p-6 bg-manhwa-mint relative">
+                    <div class="w-10 h-10 bg-white border-2 border-manhwa-dark rounded-full flex items-center justify-center font-bold text-manhwa-dark shadow-[2px_2px_0px_#2D3436] mb-3">
+                        💍
+                    </div>
+                    <h3 class="text-2xl font-comic font-bold text-manhwa-dark">Akad Nikah</h3>
+                    <p class="text-xs font-bold text-slate-700 mt-1">
+                        <i class="fa-regular fa-calendar-check mr-1"></i> Jumat, 1 Januari 2027<br>
+                        <i class="fa-regular fa-clock mr-1"></i> Pukul 10.00 - 11.00 WIB
+                    </p>
+                    <p class="text-xs text-slate-600 mt-3 font-medium">
+                        <strong>Lokasi:</strong> Grand Ballroom Balai Kartini, Lt. 2, Jakarta Selatan.
+                    </p>
+                </div>
+
+                <!-- Reception Card -->
+                <div class="webtoon-panel p-6 bg-manhwa-pink relative">
+                    <div class="w-10 h-10 bg-white border-2 border-manhwa-dark rounded-full flex items-center justify-center font-bold text-manhwa-dark shadow-[2px_2px_0px_#2D3436] mb-3">
+                        🎉
+                    </div>
+                    <h3 class="text-2xl font-comic font-bold text-manhwa-dark">Resepsi Pernikahan</h3>
+                    <p class="text-xs font-bold text-slate-700 mt-1">
+                        <i class="fa-regular fa-calendar-check mr-1"></i> Jumat, 1 Januari 2027<br>
+                        <i class="fa-regular fa-clock mr-1"></i> Pukul 12.00 - 15.00 WIB
+                    </p>
+                    <p class="text-xs text-slate-600 mt-3 font-medium">
+                        <strong>Lokasi:</strong> Main Hall Balai Kartini, Lt. 1, Jakarta Selatan.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Map Button -->
+            <div class="text-center">
+                <a href="https://maps.google.com/?q=Balai+Kartini+Jakarta" target="_blank" rel="noopener" class="webtoon-btn inline-flex items-center gap-2 px-6 py-3 text-sm">
+                    <i class="fa-solid fa-map-location-dot text-base text-manhwa-yellow"></i>
+                    <span>PETUNJUK LOKASI GOOGLE MAPS</span>
+                </a>
+            </div>
+
+            <!-- Rundown Timeline Panel -->
+            <div class="webtoon-panel p-6 sm:p-8 bg-white">
+                <h3 class="text-2xl font-comic font-bold text-manhwa-dark text-center mb-6 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-list-check text-manhwa-hotpink"></i> Timeline Acara (Mulai 10.00 WIB)
+                </h3>
+
+                <div class="space-y-4">
+                    
+                    <div class="flex items-start gap-4 p-3 rounded-xl bg-manhwa-lavender/40 border-2 border-manhwa-dark">
+                        <div class="bg-manhwa-purple text-white font-comic font-bold px-3 py-1 rounded-lg border border-manhwa-dark text-sm whitespace-nowrap">
+                            10.00 - 11.00
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-manhwa-dark">Prosesi Akad Nikah</h4>
+                            <p class="text-xs text-slate-600">Ijab kabul khidmat, penyerahan mahar, &amp; doa bersama keluarga.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 p-3 rounded-xl bg-manhwa-yellow/40 border-2 border-manhwa-dark">
+                        <div class="bg-amber-400 text-manhwa-dark font-comic font-bold px-3 py-1 rounded-lg border border-manhwa-dark text-sm whitespace-nowrap">
+                            11.00 - 12.00
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-manhwa-dark">Foto Bersama &amp; Ramah Tamah</h4>
+                            <p class="text-xs text-slate-600">Sesi foto bersama keluarga besar &amp; persiapan menjelang resepsi.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 p-3 rounded-xl bg-manhwa-pink/40 border-2 border-manhwa-dark">
+                        <div class="bg-manhwa-hotpink text-white font-comic font-bold px-3 py-1 rounded-lg border border-manhwa-dark text-sm whitespace-nowrap">
+                            12.00 - 15.00
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-manhwa-dark">Resepsi &amp; Pesta Manhwa</h4>
+                            <p class="text-xs text-slate-600">Santap siang bersama, photobooth webtoon, &amp; hiburan akustik romantis.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 p-3 rounded-xl bg-manhwa-mint/40 border-2 border-manhwa-dark">
+                        <div class="bg-teal-500 text-white font-comic font-bold px-3 py-1 rounded-lg border border-manhwa-dark text-sm whitespace-nowrap">
+                            15.00 WIB
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-manhwa-dark">Penutup &amp; Pelepasan Balon</h4>
+                            <p class="text-xs text-slate-600">Penutupan acara &amp; foto momen akhir bersama seluruh undangan.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- PREWEDDING PHOTO GALLERY PANEL -->
+        <section class="space-y-6">
+            <div class="text-center">
+                <div class="webtoon-badge mb-2">Webtoon Cutscenes</div>
+                <h2 class="text-3xl sm:text-4xl font-comic font-bold text-manhwa-dark">Galeri Foto Prewedding</h2>
+            </div>
+
+            <!-- Comic Panel Layout Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                
+                <div class="webtoon-panel p-2 bg-white">
+                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" alt="Cutscene 1" class="w-full h-48 object-cover rounded-lg border border-manhwa-dark">
+                    <p class="text-center font-comic font-bold text-xs mt-2 text-manhwa-dark">PANEL #01</p>
+                </div>
+
+                <div class="webtoon-panel p-2 bg-white">
+                    <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=600" alt="Cutscene 2" class="w-full h-48 object-cover rounded-lg border border-manhwa-dark">
+                    <p class="text-center font-comic font-bold text-xs mt-2 text-manhwa-dark">PANEL #02</p>
+                </div>
+
+                <div class="webtoon-panel p-2 bg-white">
+                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80&w=600" alt="Cutscene 3" class="w-full h-48 object-cover rounded-lg border border-manhwa-dark">
+                    <p class="text-center font-comic font-bold text-xs mt-2 text-manhwa-dark">PANEL #03</p>
+                </div>
+
+                <div class="webtoon-panel p-2 bg-white">
+                    <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=600" alt="Cutscene 4" class="w-full h-48 object-cover rounded-lg border border-manhwa-dark">
+                    <p class="text-center font-comic font-bold text-xs mt-2 text-manhwa-dark">PANEL #04</p>
+                </div>
+
+                <div class="webtoon-panel p-2 bg-white">
+                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" alt="Cutscene 5" class="w-full h-48 object-cover rounded-lg border border-manhwa-dark">
+                    <p class="text-center font-comic font-bold text-xs mt-2 text-manhwa-dark">PANEL #05</p>
+                </div>
+
+                <div class="webtoon-panel p-2 bg-white">
+                    <img src="https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?auto=format&fit=crop&q=80&w=600" alt="Cutscene 6" class="w-full h-48 object-cover rounded-lg border border-manhwa-dark">
+                    <p class="text-center font-comic font-bold text-xs mt-2 text-manhwa-dark">PANEL #06</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- DIGITAL ENVELOPE / GIFT PANEL -->
+        <section class="webtoon-panel p-6 sm:p-8 bg-manhwa-cardBg text-center space-y-6">
+            <div class="webtoon-badge">Support The Authors</div>
+            <h2 class="text-3xl sm:text-4xl font-comic font-bold text-manhwa-dark">Amplop Digital &amp; Hadiah</h2>
+            <p class="text-xs text-slate-600 max-w-md mx-auto">
+                Doa restu Anda adalah hadiah terindah. Namun jika ingin memberikan tanda kasih berupa hadiah digital, Anda dapat mentransfer ke rekening di bawah ini:
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
+                <!-- BCA -->
+                <div class="bg-white border-3 border-manhwa-dark p-5 rounded-xl shadow-[4px_4px_0px_#2D3436]">
+                    <div class="w-10 h-10 mx-auto bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-xs mb-2">BCA</div>
+                    <p class="text-xs text-slate-500 font-bold">Bank BCA</p>
+                    <p id="rekening-bca" class="text-xl font-comic font-bold text-manhwa-dark my-1">1234 5678 90</p>
+                    <p class="text-xs text-slate-600 font-semibold mb-3">a.n. Alif Pratama</p>
+
+                    <button onclick="copyToClipboard('rekening-bca', 'btn-bca')" id="btn-bca" class="webtoon-btn w-full py-2 text-xs">
+                        <i class="fa-regular fa-copy mr-1"></i> Salin Rekening BCA
+                    </button>
+                </div>
+
+                <!-- Mandiri -->
+                <div class="bg-white border-3 border-manhwa-dark p-5 rounded-xl shadow-[4px_4px_0px_#2D3436]">
+                    <div class="w-10 h-10 mx-auto bg-amber-500 text-white rounded-full flex items-center justify-center font-bold text-xs mb-2">MANDIRI</div>
+                    <p class="text-xs text-slate-500 font-bold">Bank Mandiri</p>
+                    <p id="rekening-mandiri" class="text-xl font-comic font-bold text-manhwa-dark my-1">9876 5432 10123</p>
+                    <p class="text-xs text-slate-600 font-semibold mb-3">a.n. Olive Anindya</p>
+
+                    <button onclick="copyToClipboard('rekening-mandiri', 'btn-mandiri')" id="btn-mandiri" class="webtoon-btn w-full py-2 text-xs">
+                        <i class="fa-regular fa-copy mr-1"></i> Salin Rekening Mandiri
+                    </button>
+                </div>
+            </div>
+
+            <!-- QRIS -->
+            <div class="bg-white border-3 border-manhwa-dark p-5 rounded-xl shadow-[4px_4px_0px_#2D3436] max-w-xs mx-auto">
+                <p class="text-xs font-bold text-slate-700 mb-2">Scan QRIS Pembayaran</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=AlifOliveWedding" alt="QRIS" class="w-36 h-36 mx-auto border-2 border-manhwa-dark rounded-lg p-1">
+                <p class="text-[10px] text-slate-500 font-bold mt-2">GoPay, OVO, Dana, ShopeePay, dll.</p>
+            </div>
+        </section>
+
+        <!-- RSVP & WISHES PANEL -->
+        <section class="webtoon-panel p-6 sm:p-8 bg-manhwa-lavender/50 space-y-6">
+            <div class="text-center">
+                <div class="webtoon-badge mb-2">Comments Section</div>
+                <h2 class="text-3xl sm:text-4xl font-comic font-bold text-manhwa-dark">Kirim Ucapan &amp; RSVP</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- RSVP Form -->
+                <form id="rsvp-form" onsubmit="handleFormSubmit(event)" class="bg-white border-3 border-manhwa-dark p-5 rounded-xl shadow-[4px_4px_0px_#2D3436] space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-manhwa-dark uppercase mb-1">Nama Lengkap</label>
+                        <input type="text" id="input-name" required placeholder="Contoh: Budi Santoso" class="w-full px-3.5 py-2 bg-manhwa-cardBg border-2 border-manhwa-dark rounded-lg focus:outline-none focus:border-manhwa-hotpink text-xs font-semibold">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-manhwa-dark uppercase mb-1">Konfirmasi Kehadiran</label>
+                        <select id="input-attendance" class="w-full px-3.5 py-2 bg-manhwa-cardBg border-2 border-manhwa-dark rounded-lg focus:outline-none focus:border-manhwa-hotpink text-xs font-semibold">
+                            <option value="Hadir">Pasti Hadir</option>
+                            <option value="Tidak Hadir">Maaf, Tidak Bisa Hadir</option>
+                            <option value="Ragu-ragu">Masih Ragu-ragu</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-manhwa-dark uppercase mb-1">Ucapan &amp; Doa</label>
+                        <textarea id="input-message" rows="3" required placeholder="Tuliskan pesan manis untuk pasangan webtoon kita..." class="w-full px-3.5 py-2 bg-manhwa-cardBg border-2 border-manhwa-dark rounded-lg focus:outline-none focus:border-manhwa-hotpink text-xs font-semibold"></textarea>
+                    </div>
+
+                    <button type="submit" class="webtoon-btn w-full py-2.5 text-xs">
+                        <i class="fa-solid fa-paper-plane mr-1"></i> KIRIM UCAPAN
+                    </button>
+                </form>
+
+                <!-- Dynamic Wishes Container -->
+                <div class="bg-white border-3 border-manhwa-dark p-5 rounded-xl shadow-[4px_4px_0px_#2D3436] flex flex-col h-[380px]">
+                    <h3 class="font-comic font-bold text-xl text-manhwa-dark mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-comments text-manhwa-hotpink"></i> Pesan Pembaca
+                    </h3>
+
+                    <div id="wishes-container" class="space-y-3 overflow-y-auto pr-1 flex-1">
+                        
+                        <div class="p-3 bg-manhwa-cardBg border-2 border-manhwa-dark rounded-lg text-xs">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-manhwa-dark">Siska &amp; Ryan</span>
+                                <span class="bg-manhwa-mint text-manhwa-dark border border-manhwa-dark px-2 py-0.5 rounded-full text-[10px] font-bold">Hadir</span>
+                            </div>
+                            <p class="text-slate-700 italic font-medium">"Happy wedding Alif &amp; Olive! Semoga menjadi pasangan bahagia selamanya bak karakter komik!"</p>
+                        </div>
+
+                        <div class="p-3 bg-manhwa-cardBg border-2 border-manhwa-dark rounded-lg text-xs">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-manhwa-dark">Kevin Pratama</span>
+                                <span class="bg-manhwa-mint text-manhwa-dark border border-manhwa-dark px-2 py-0.5 rounded-full text-[10px] font-bold">Hadir</span>
+                            </div>
+                            <p class="text-slate-700 italic font-medium">"Congrats kawan! Semoga lancar sampai hari H!"</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center py-8 space-y-2">
+            <h3 class="text-3xl font-comic font-bold text-manhwa-dark">Alif &amp; Olive</h3>
+            <p class="text-xs font-semibold text-slate-600">Sampai Jumpa di Episode Spesial Pernikahan Kami!</p>
+            <p class="text-[10px] text-slate-500 font-bold pt-4">&copy; 2027 Alif &amp; Olive Digital Invitation. Korean Webtoon Edition.</p>
+        </footer>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Target Date: January 1, 2027 10:00:00 WIB
+        const targetDate = new Date("January 1, 2027 10:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+                document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+                document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+                document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+            } else {
+                document.getElementById('countdown').innerHTML = "<div class='col-span-4 text-manhwa-yellow font-comic font-bold text-2xl'>EPISODE SPESIAL SEDANG BERLANGSUNG!</div>";
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Audio Player Controls
+        const audio = document.getElementById('bg-music');
+        const audioBtn = document.getElementById('audio-toggle');
+        const audioIcon = document.getElementById('audio-icon');
+        let isPlaying = false;
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('animate-spin');
+                audioIcon.classList.replace('fa-compact-disc', 'fa-heart');
+                isPlaying = false;
+            } else {
+                audio.play().then(() => {
+                    audioIcon.classList.add('animate-spin');
+                    audioIcon.classList.replace('fa-heart', 'fa-compact-disc');
+                    isPlaying = true;
+                }).catch(err => {
+                    console.log("Audio autoplay prevented by browser.");
+                });
+            }
+        }
+
+        audioBtn.addEventListener('click', toggleAudio);
+
+        // Open Invitation
+        function openInvitation() {
+            const cover = document.getElementById('cover-overlay');
+            cover.style.transform = 'translateY(-100%)';
+            cover.style.opacity = '0';
+            setTimeout(() => {
+                cover.style.display = 'none';
+            }, 700);
+
+            toggleAudio();
+        }
+
+        // URL Query Guest Name Handler
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const guestName = urlParams.get('to');
+            if (guestName) {
+                document.getElementById('guest-name').innerText = guestName;
+            }
+        });
+
+        // Copy Account Number
+        function copyToClipboard(elementId, btnId) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            const btn = document.getElementById(btnId);
+
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check text-white mr-1"></i> Tersalin!';
+            btn.style.background = '#2ED573';
+
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = '';
+            }, 2500);
+        }
+
+        // RSVP Form Submit Handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('input-name').value;
+            const attendance = document.getElementById('input-attendance').value;
+            const message = document.getElementById('input-message').value;
+            const container = document.getElementById('wishes-container');
+
+            const newWish = document.createElement('div');
+            newWish.className = 'p-3 bg-manhwa-cardBg border-2 border-manhwa-dark rounded-lg text-xs transition-all duration-300 opacity-0 translate-y-2';
+            newWish.innerHTML = `
+                <div class="flex justify-between items-center mb-1">
+                    <span class="font-bold text-manhwa-dark">${escapeHtml(name)}</span>
+                    <span class="bg-manhwa-mint text-manhwa-dark border border-manhwa-dark px-2 py-0.5 rounded-full text-[10px] font-bold">${escapeHtml(attendance)}</span>
+                </div>
+                <p class="text-slate-700 italic font-medium">"${escapeHtml(message)}"</p>
+            `;
+
+            container.insertBefore(newWish, container.firstChild);
+
+            setTimeout(() => {
+                newWish.classList.remove('opacity-0', 'translate-y-2');
+            }, 10);
+
+            document.getElementById('rsvp-form').reset();
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
